@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book info</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-flat.css">
+    <style>
+        .my-text{
+            font-size:30px;
+        }
+    </style>
+</head>
+
+<body class="w3-content w3-blue-gray" style="max-width:1300px">
+    <div class="my-header">
+        <h1>BOOK INFO</h1>
+    </div>
+    <div class=" w3-block w3-cursive w3-center my-text">
+        <div th:text="${'- ID: ' + book.getBookId()}">book id</div>
+        <div th:text="${'- Name: ' + book.getName()}">book name</div>
+        <div th:text="${'- Author: ' + book.getAuthor()}">book author</div>
+        <div th:text="${'- Year: ' + book.getYear()}">book year</div>
+        <hr>
+
+        <div th:if="${owner}">
+            <form th:method="PATCH" th:action="@{/books/{bookId}/release(bookId=${book.getBookId()})}">
+                <label th:text="'&quot;' + ${owner.getFullName()} + '&quot;' + ' has the book now'"></label>
+                <br>
+                <input class="w3-button w3-light-gray" type="submit" value="release">
+            </form>
+        </div>
+
+        <div th:if="${persons}">
+            <span>The book is free. Appoint to somebody ?</span>
+            <br>
+            <form th:method="PATCH" th:action="@{/books/{bookId}/assign(bookId=${book.getBookId()})}">
+                <label for="personList"> Choose a person: </label>
+                <select th:object="${person}" th:field="*{personId}" id="personList">
+                    <option th:each="p : ${persons}" th:value="${p.getPersonId()}"
+                            th:text="${p.getFullName()}">Person Name</option>
+                </select>
+                <input class="w3-button w3-light-gray" type="submit" value="confirm">
+            </form>
+        </div>
+    </div>
+</body>
+
+<footer class="w3-right-align w3-blue-gray w3-padding-16 my-text">
+    <a class="w3-button w3-hover-orange" style="text-decoration:none"
+       th:href="@{/books/{bookId}/edit(bookId=${book.getBookId()})}">Edit book</a>
+    <div class="w3-padding-small"></div>
+    <form th:method="DELETE" th:action="@{/books/{bookId}(bookId=${book.getBookId()})}">
+        <input class="w3-button w3-hover-orange" type="submit" value="Delete">
+    </form>
+</footer>
+
+</html>
+
